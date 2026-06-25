@@ -3,7 +3,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  ChevronDown,
   Download,
+  FileText,
+  Folder,
+  Menu,
   Terminal,
   Settings,
   Puzzle,
@@ -11,22 +15,114 @@ import {
   Trophy,
   Variable,
   CheckCircle2,
-  Copy,
-  Check,
   ExternalLink,
-  ChevronRight,
   AlertTriangle,
   ComputerIcon,
+  X,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import CodeBlock from "@/components/Shared/CodeBlock";
 import StepWrap from "@/components/Shared/StepWrap";
 import Kbd from "@/components/Shared/Kbd";
 import StepHeading from "@/components/Shared/StepHeading";
 import Footer from "@/components/Shared/Footer";
+import { useIsMobile } from "@/hooks/use-mobile";
+import Chip from "@/components/Shared/Chip";
+
+type ExplorerNode = {
+  id: string;
+  label: string;
+  kind: "folder" | "file" | "section";
+  icon?: LucideIcon;
+  href?: string;
+  defaultOpen?: boolean;
+  children?: ExplorerNode[];
+};
+
+const GUIDE_SECTION_NODES: ExplorerNode[] = [
+  {
+    id: "overview",
+    label: "Overview",
+    kind: "section",
+    icon: PlayCircle,
+    href: "#overview",
+  },
+  {
+    id: "step-1",
+    label: "1. Download Software",
+    kind: "section",
+    icon: Download,
+    href: "#step-1",
+  },
+  {
+    id: "step-2",
+    label: "2. Environment Path",
+    kind: "section",
+    icon: Variable,
+    href: "#step-2",
+  },
+  {
+    id: "step-3",
+    label: "3. Verify Install",
+    kind: "section",
+    icon: CheckCircle2,
+    href: "#step-3",
+  },
+  {
+    id: "step-4",
+    label: "4. settings.json",
+    kind: "section",
+    icon: Settings,
+    href: "#step-4",
+  },
+  {
+    id: "step-5",
+    label: "5. Extensions",
+    kind: "section",
+    icon: Puzzle,
+    href: "#step-5",
+  },
+  {
+    id: "step-6",
+    label: "6. Test Code",
+    kind: "section",
+    icon: Terminal,
+    href: "#step-6",
+  },
+  {
+    id: "competitive",
+    label: "Competitive Programming",
+    kind: "section",
+    icon: Trophy,
+    href: "#competitive",
+  },
+];
+
+const EXPLORER_TREE: ExplorerNode[] = [
+  {
+    id: "vs-code-cpp-setup",
+    label: "VS-CODE-CPP-SETUP",
+    kind: "folder",
+    icon: Folder,
+    defaultOpen: true,
+    children: [
+      {
+        id: "guide-md",
+        label: "guide.md",
+        kind: "file",
+        icon: FileText,
+        defaultOpen: true,
+        href: "#overview",
+        children: GUIDE_SECTION_NODES,
+      },
+    ],
+  },
+];
+
+const DEFAULT_OPEN_IDS = collectDefaultOpenIds(EXPLORER_TREE);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,19 +150,23 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const NAV = [
-  { id: "overview", label: "Overview", icon: PlayCircle },
-  { id: "step-1", label: "1. Download Software", icon: Download },
-  { id: "step-2", label: "2. Environment Path", icon: Variable },
-  { id: "step-3", label: "3. Verify Install", icon: CheckCircle2 },
-  { id: "step-4", label: "4. settings.json", icon: Settings },
-  { id: "step-5", label: "5. Extensions", icon: Puzzle },
-  { id: "step-6", label: "6. Test Code", icon: Terminal },
-  { id: "competitive", label: "Competitive Programming", icon: Trophy },
-];
-
 function LandingPage() {
   const [active, setActive] = useState<string>("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [openIds, setOpenIds] = useState<string[]>(DEFAULT_OPEN_IDS);
+  const isMobile = useIsMobile();
+  const showMobileSidebar = isMobile && sidebarOpen;
+
+  const activePath = findNodePath(EXPLORER_TREE, active) ?? [];
+
+  useEffect(() => {
+    if (!showMobileSidebar) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showMobileSidebar]);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -78,25 +178,66 @@ function LandingPage() {
       },
       { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
     );
-    NAV.forEach((n) => {
+    GUIDE_SECTION_NODES.forEach((n) => {
       const el = document.getElementById(n.id);
       if (el) obs.observe(el);
     });
     return () => obs.disconnect();
   }, []);
 
+  function handleNavigate(id: string) {
+    setActive(id);
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }
+
+  function handleToggleNode(id: string) {
+    setOpenIds((current) =>
+      current.includes(id)
+        ? current.filter((value) => value !== id)
+        : [...current, id],
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster theme="dark" />
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 flex h-12 items-center justify-between border-b border-border bg-[#323233] px-4 text-sm">
-        <div className="flex items-center gap-3">
-          <VSCodeIcon className="h-5 w-5" />
-          <span className="font-mono text-xs text-vscode-muted">
-            <span className="text-vscode-text">VS Code Setup</span>
-            <span className="mx-2">›</span>
-            <span>C / C++</span>
-          </span>
+      <header className="sticky top-0 z-50 flex h-12 items-center justify-between border-b border-border bg-[#323233] px-3 text-sm sm:px-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="ghost"
+            className="shrink-0 text-vscode-text hover:bg-vscode-elevated hover:text-white lg:hidden"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open explorer"
+          >
+            <Menu className="h-4 w-4" />
+          </Button>
+          <VSCodeIcon className="h-5 w-5 shrink-0" />
+          <div className="min-w-0">
+            <div className="truncate font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-vscode-muted">
+              Explorer
+            </div>
+            <div className="flex min-w-0 flex-wrap items-center gap-1 font-mono text-[11px] text-vscode-text sm:text-xs">
+              {activePath.map((node, index) => (
+                <span
+                  key={node.id}
+                  className={
+                    index === activePath.length - 1
+                      ? "text-white"
+                      : "text-vscode-text"
+                  }
+                >
+                  {index > 0 ? (
+                    <span className="mx-1 text-vscode-muted">›</span>
+                  ) : null}
+                  {node.label}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
         <a
           href="https://code.visualstudio.com/"
@@ -109,41 +250,16 @@ function LandingPage() {
         </a>
       </header>
 
-      <div className="flex">
-        {/* Sidebar */}
-        <aside className="sticky top-12 hidden h-[calc(100vh-3rem)] w-72 shrink-0 overflow-y-auto border-r border-border bg-vscode-panel lg:block">
-          <div className="px-4 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-widest text-vscode-muted">
-            Explorer
-          </div>
-          <div className="px-2 pb-2 text-xs font-semibold text-vscode-text">
-            <span className="inline-flex items-center gap-1 px-2 py-1">
-              <ChevronRight className="h-3 w-3" />
-              VS-CODE-CPP-SETUP
-            </span>
-          </div>
-          <nav className="px-2 pb-8">
-            {NAV.map((item) => {
-              const Icon = item.icon;
-              const isActive = active === item.id;
-              return (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className={`flex items-center gap-2 rounded-sm px-3 py-1.5 text-sm transition-colors ${
-                    isActive
-                      ? "bg-vscode-accent text-vscode-accent-foreground"
-                      : "text-vscode-text hover:bg-vscode-elevated"
-                  }`}
-                >
-                  <Icon className="h-4 w-4 shrink-0 text-vscode-blue" />
-                  <span className="truncate">{item.label}</span>
-                </a>
-              );
-            })}
-          </nav>
+      <div className="flex min-h-[calc(100vh-3rem)]">
+        <aside className="sticky top-12 hidden h-[calc(100vh-3rem)] w-80 shrink-0 overflow-y-auto border-r border-border bg-vscode-panel lg:block">
+          <ExplorerPanel
+            activeId={active}
+            openIds={openIds}
+            onNavigate={handleNavigate}
+            onToggleNode={handleToggleNode}
+          />
         </aside>
 
-        {/* Content */}
         <main className="min-w-0 flex-1">
           <article className="mx-auto max-w-3xl px-6 py-12 lg:px-12 lg:py-16">
             <Hero />
@@ -158,6 +274,45 @@ function LandingPage() {
           </article>
         </main>
       </div>
+
+      {showMobileSidebar ? (
+        <div className="fixed inset-x-0 bottom-0 top-12 z-40 lg:hidden">
+          <button
+            type="button"
+            aria-label="Close explorer"
+            className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+            onClick={() => setSidebarOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 flex h-full w-[min(86vw,19rem)] flex-col border-r border-border bg-vscode-panel shadow-2xl">
+            <div className="flex items-center justify-between border-b border-vscode-border px-4 py-3">
+              <div>
+                <div className="font-mono text-xs uppercase tracking-[0.24em] text-vscode-muted">
+                  Explorer
+                </div>
+                <div className="font-mono text-sm text-vscode-text">
+                  VS-CODE-CPP-SETUP
+                </div>
+              </div>
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                className="text-vscode-text hover:bg-vscode-elevated hover:text-white"
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close explorer"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <ExplorerPanel
+              activeId={active}
+              openIds={openIds}
+              onNavigate={handleNavigate}
+              onToggleNode={handleToggleNode}
+            />
+          </aside>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -296,14 +451,6 @@ function Step1() {
   );
 }
 
-function Chip({ children }: { children: ReactNode }) {
-  return (
-    <code className="rounded bg-vscode-elevated px-1.5 py-0.5 font-mono text-[12px] text-vscode-orange">
-      {children}
-    </code>
-  );
-}
-
 function Step2() {
   const steps: ReactNode[] = [
     <>
@@ -385,7 +532,7 @@ function Step3() {
         </div>
         <CodeBlock label="error" code={`'gcc' is not recognized...`} />
         <p className="mt-3 text-sm text-vscode-text">
-          Then PATH isn't set correctly — revisit Step 2 and confirm the{" "}
+          Then PATH is not set correctly — revisit Step 2 and confirm the{" "}
           <Chip>bin</Chip> path was added under <em>User variables</em>.
         </p>
       </div>
@@ -615,6 +762,151 @@ function VSCodeIcon({ className = "" }: { className?: string }) {
         d="M70 8 35 42 18 28 8 34v32l10 6 17-14 35 34 22-10V18zM70 32v36L42 50z"
       />
     </svg>
+  );
+}
+
+function collectDefaultOpenIds(nodes: ExplorerNode[]): string[] {
+  return nodes.flatMap((node) => [
+    ...(node.defaultOpen ? [node.id] : []),
+    ...(node.children ? collectDefaultOpenIds(node.children) : []),
+  ]);
+}
+
+function findNodePath(
+  nodes: ExplorerNode[],
+  targetId: string,
+): ExplorerNode[] | null {
+  for (const node of nodes) {
+    if (node.id === targetId) {
+      return [node];
+    }
+
+    if (!node.children) {
+      continue;
+    }
+
+    const childPath = findNodePath(node.children, targetId);
+    if (childPath) {
+      return [node, ...childPath];
+    }
+  }
+
+  return null;
+}
+
+function ExplorerPanel({
+  activeId,
+  openIds,
+  onNavigate,
+  onToggleNode,
+}: {
+  activeId: string;
+  openIds: string[];
+  onNavigate: (id: string) => void;
+  onToggleNode: (id: string) => void;
+}) {
+  return (
+    <div className="flex h-full flex-col">
+      <div className="px-4 pt-5 pb-2 text-[11px] font-semibold uppercase tracking-widest text-vscode-muted">
+        Explorer
+      </div>
+      <nav className="px-2 pb-8">
+        {EXPLORER_TREE.map((node) => (
+          <ExplorerTreeNode
+            key={node.id}
+            node={node}
+            depth={0}
+            activeId={activeId}
+            openIds={openIds}
+            onNavigate={onNavigate}
+            onToggleNode={onToggleNode}
+          />
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+function ExplorerTreeNode({
+  node,
+  depth,
+  activeId,
+  openIds,
+  onNavigate,
+  onToggleNode,
+}: {
+  node: ExplorerNode;
+  depth: number;
+  activeId: string;
+  openIds: string[];
+  onNavigate: (id: string) => void;
+  onToggleNode: (id: string) => void;
+}) {
+  const hasChildren = Boolean(node.children?.length);
+  const isOpen = openIds.includes(node.id);
+  const isActive = activeId === node.id;
+  const Icon = node.icon ?? (node.kind === "folder" ? Folder : FileText);
+
+  return (
+    <div>
+      <div
+        className={`group flex items-center gap-1 rounded-sm px-2 py-1 text-sm transition-colors ${
+          isActive
+            ? "bg-vscode-accent text-vscode-accent-foreground"
+            : "text-vscode-text hover:bg-vscode-elevated"
+        }`}
+        style={{ paddingLeft: `${0.75 + depth * 0.9}rem` }}
+      >
+        {hasChildren ? (
+          <button
+            type="button"
+            onClick={() => onToggleNode(node.id)}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-vscode-muted transition-colors hover:bg-black/20 hover:text-white"
+            aria-label={`${isOpen ? "Collapse" : "Expand"} ${node.label}`}
+            aria-expanded={isOpen}
+          >
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-0" : "-rotate-90"}`}
+            />
+          </button>
+        ) : (
+          <span className="h-6 w-6 shrink-0" aria-hidden="true" />
+        )}
+
+        <button
+          type="button"
+          onClick={() => {
+            if (node.href) {
+              onNavigate(node.href.replace(/^#/, ""));
+            } else if (hasChildren) {
+              onToggleNode(node.id);
+            }
+          }}
+          className="flex min-w-0 flex-1 items-center gap-2 text-left"
+        >
+          <Icon
+            className={`h-4 w-4 shrink-0 ${node.kind === "folder" ? "text-vscode-yellow" : "text-vscode-blue"}`}
+          />
+          <span className="truncate">{node.label}</span>
+        </button>
+      </div>
+
+      {hasChildren && isOpen ? (
+        <div className="mt-0.5 space-y-0.5">
+          {node.children!.map((child) => (
+            <ExplorerTreeNode
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              activeId={activeId}
+              openIds={openIds}
+              onNavigate={onNavigate}
+              onToggleNode={onToggleNode}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
