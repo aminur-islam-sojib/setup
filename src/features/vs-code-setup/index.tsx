@@ -1,6 +1,6 @@
 "use client";
 
-import {createFileRoute} from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
   Download,
@@ -17,12 +17,16 @@ import {
   ChevronRight,
   AlertTriangle,
   ComputerIcon,
-  
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import CodeBlock from "@/components/Shared/CodeBlock";
+import StepWrap from "@/components/Shared/StepWrap";
+import Kbd from "@/components/Shared/Kbd";
+import StepHeading from "@/components/Shared/StepHeading";
+import Footer from "@/components/Shared/Footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,7 +37,10 @@ export const Route = createFileRoute("/")({
         content:
           "Step-by-step guide to set up Visual Studio Code for C and C++ development on Windows and Linux: MinGW, environment variables, extensions, and competitive programming tools.",
       },
-      { property: "og:title", content: "VS Code Setup for C/C++ — Complete Guide" },
+      {
+        property: "og:title",
+        content: "VS Code Setup for C/C++ — Complete Guide",
+      },
       {
         property: "og:description",
         content:
@@ -69,7 +76,7 @@ function LandingPage() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) setActive(visible[0].target.id);
       },
-      { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] }
+      { rootMargin: "-30% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
     );
     NAV.forEach((n) => {
       const el = document.getElementById(n.id);
@@ -179,7 +186,10 @@ function Hero() {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button asChild className="bg-vscode-blue text-white hover:bg-vscode-blue/90">
+        <Button
+          asChild
+          className="bg-vscode-blue text-white hover:bg-vscode-blue/90"
+        >
           <a href="#step-1">
             <Download className="mr-2 h-4 w-4" /> Get Started
           </a>
@@ -208,43 +218,10 @@ function Stat({ k, v }: { k: string; v: string }) {
   return (
     <div>
       <div className="font-mono text-2xl font-bold text-vscode-teal">{k}</div>
-      <div className="text-xs uppercase tracking-wider text-vscode-muted">{v}</div>
-    </div>
-  );
-}
-
-function StepHeading({
-  n,
-  title,
-  desc,
-}: {
-  n: number;
-  title: string;
-  desc?: string;
-}) {
-  return (
-    <div className="mb-6">
-      <div className="mb-2 flex items-center gap-3">
-        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-vscode-blue font-mono text-sm font-bold text-white">
-          {n}
-        </span>
-        <span className="font-mono text-xs uppercase tracking-widest text-vscode-muted">
-          Step {n}
-        </span>
+      <div className="text-xs uppercase tracking-wider text-vscode-muted">
+        {v}
       </div>
-      <h2 className="font-mono text-2xl font-bold text-white sm:text-3xl">
-        {title}
-      </h2>
-      {desc && <p className="mt-2 text-sm text-vscode-text">{desc}</p>}
     </div>
-  );
-}
-
-function StepWrap({ id, children }: { id: string; children: ReactNode }) {
-  return (
-    <section id={id} className="scroll-mt-20 border-t border-vscode-border pt-14 mt-16">
-      {children}
-    </section>
   );
 }
 
@@ -253,7 +230,12 @@ function Step1() {
     {
       name: "VS Code",
       desc: "The editor itself. Download the stable build for your OS.",
-      links: [{ label: "code.visualstudio.com/download", href: "https://code.visualstudio.com/download" }],
+      links: [
+        {
+          label: "code.visualstudio.com/download",
+          href: "https://code.visualstudio.com/download",
+        },
+      ],
     },
     {
       name: "MinGW Compiler",
@@ -266,7 +248,12 @@ function Step1() {
     {
       name: "Git Bash",
       desc: "A Unix-style shell that pairs nicely with VS Code's terminal.",
-      links: [{ label: "git-scm.com/downloads", href: "https://git-scm.com/downloads" }],
+      links: [
+        {
+          label: "git-scm.com/downloads",
+          href: "https://git-scm.com/downloads",
+        },
+      ],
     },
   ];
   return (
@@ -285,7 +272,9 @@ function Step1() {
             <div className="font-mono text-sm font-semibold text-vscode-teal">
               {t.name}
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-vscode-text">{t.desc}</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-vscode-text">
+              {t.desc}
+            </p>
             <div className="mt-3 space-y-1">
               {t.links.map((l) => (
                 <a
@@ -307,14 +296,6 @@ function Step1() {
   );
 }
 
-function Kbd({ children }: { children: ReactNode }) {
-  return (
-    <kbd className="inline-flex items-center rounded border border-vscode-border bg-vscode-elevated px-1.5 py-0.5 font-mono text-[11px] text-vscode-text">
-      {children}
-    </kbd>
-  );
-}
-
 function Chip({ children }: { children: ReactNode }) {
   return (
     <code className="rounded bg-vscode-elevated px-1.5 py-0.5 font-mono text-[12px] text-vscode-orange">
@@ -325,15 +306,37 @@ function Chip({ children }: { children: ReactNode }) {
 
 function Step2() {
   const steps: ReactNode[] = [
-    <>Move the extracted MinGW folder to <Chip>C:\</Chip>.</>,
-    <>Press <Kbd>Win</Kbd> + <Kbd>S</Kbd>.</>,
-    <>Search for <Chip>Environment Variables</Chip>.</>,
-    <>Open <strong className="text-white">Edit the system environment variables</strong>.</>,
-    <>Click <strong className="text-white">Environment Variables</strong>.</>,
-    <>Under <em>User variables</em>, select <Chip>Path → Edit</Chip>.</>,
-    <>Click <strong className="text-white">New</strong>.</>,
-    <>Paste the MinGW <Chip>bin</Chip> path.</>,
-    <>Click <strong className="text-white">OK</strong> on all windows.</>,
+    <>
+      Move the extracted MinGW folder to <Chip>C:\</Chip>.
+    </>,
+    <>
+      Press <Kbd>Win</Kbd> + <Kbd>S</Kbd>.
+    </>,
+    <>
+      Search for <Chip>Environment Variables</Chip>.
+    </>,
+    <>
+      Open{" "}
+      <strong className="text-white">
+        Edit the system environment variables
+      </strong>
+      .
+    </>,
+    <>
+      Click <strong className="text-white">Environment Variables</strong>.
+    </>,
+    <>
+      Under <em>User variables</em>, select <Chip>Path → Edit</Chip>.
+    </>,
+    <>
+      Click <strong className="text-white">New</strong>.
+    </>,
+    <>
+      Paste the MinGW <Chip>bin</Chip> path.
+    </>,
+    <>
+      Click <strong className="text-white">OK</strong> on all windows.
+    </>,
   ];
   return (
     <StepWrap id="step-2">
@@ -368,7 +371,9 @@ function Step3() {
         desc="Open a new Command Prompt and run:"
       />
       <CodeBlock label="cmd" code={`gcc --version`} />
-      <p className="mt-6 mb-2 text-sm text-vscode-text">You should see something like:</p>
+      <p className="mt-6 mb-2 text-sm text-vscode-text">
+        You should see something like:
+      </p>
       <CodeBlock label="output" code={`gcc (MinGW-W64) 14.x.x`} />
 
       <div className="mt-6 rounded-md border-l-4 border-vscode-orange bg-vscode-panel p-4">
@@ -420,10 +425,16 @@ function Step4() {
       />
       <Tabs defaultValue="windows" className="w-full">
         <TabsList className="bg-vscode-panel">
-          <TabsTrigger value="windows" className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal">
+          <TabsTrigger
+            value="windows"
+            className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal"
+          >
             Windows
           </TabsTrigger>
-          <TabsTrigger value="linux" className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal">
+          <TabsTrigger
+            value="linux"
+            className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal"
+          >
             Linux
           </TabsTrigger>
         </TabsList>
@@ -462,7 +473,9 @@ function Step5() {
               <Puzzle className="h-5 w-5 text-vscode-teal" />
             </div>
             <div className="min-w-0">
-              <div className="font-mono text-sm font-semibold text-white">{e.name}</div>
+              <div className="font-mono text-sm font-semibold text-white">
+                {e.name}
+              </div>
               <div className="mt-0.5 font-mono text-[11px] text-vscode-muted">
                 {e.version} · by {e.by}
               </div>
@@ -503,10 +516,16 @@ function Step6() {
       />
       <Tabs defaultValue="basic" className="w-full">
         <TabsList className="bg-vscode-panel">
-          <TabsTrigger value="basic" className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal">
+          <TabsTrigger
+            value="basic"
+            className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal"
+          >
             Basic Output
           </TabsTrigger>
-          <TabsTrigger value="io" className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal">
+          <TabsTrigger
+            value="io"
+            className="data-[state=active]:bg-vscode-elevated data-[state=active]:text-vscode-teal"
+          >
             Standard I/O
           </TabsTrigger>
         </TabsList>
@@ -561,8 +580,8 @@ function Competitive() {
             <ExternalLink className="h-4 w-4 text-vscode-blue group-hover:text-vscode-teal" />
           </div>
           <p className="mt-2 text-xs text-vscode-text">
-            Parses problem statements from judging sites and sends them
-            directly into your editor.
+            Parses problem statements from judging sites and sends them directly
+            into your editor.
           </p>
         </a>
         <a
@@ -588,56 +607,6 @@ function Competitive() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="mt-20 border-t border-vscode-border pt-8 pb-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-vscode-muted">
-        <div className="font-mono">
-          <span className="text-vscode-teal">~/</span>vs-code-cpp-setup ·{" "}
-          <span className="text-vscode-text">main</span>
-        </div>
-        <div>Crafted for developers learning C/C++ on Windows & Linux.</div>
-      </div>
-    </footer>
-  );
-}
-
-function CodeBlock({ code, label }: { code: string; label: string }) {
-  const [copied, setCopied] = useState(false);
-  const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCopied(true);
-      toast.success("Copied to clipboard");
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      toast.error("Copy failed");
-    }
-  };
-  return (
-    <div className="overflow-hidden rounded-md border border-vscode-border bg-[#1e1e1e] shadow-lg">
-      <div className="flex items-center justify-between border-b border-vscode-border bg-[#323233] px-3 py-2">
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-          <span className="ml-3 font-mono text-[11px] text-vscode-muted">{label}</span>
-        </div>
-        <button
-          onClick={onCopy}
-          className="flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[11px] text-vscode-muted hover:bg-vscode-elevated hover:text-vscode-text"
-        >
-          {copied ? <Check className="h-3 w-3 text-vscode-teal" /> : <Copy className="h-3 w-3" />}
-          {copied ? "Copied" : "Copy"}
-        </button>
-      </div>
-      <pre className="overflow-x-auto px-4 py-3 font-mono text-[13px] leading-relaxed text-vscode-text">
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
-}
-
 function VSCodeIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
@@ -650,4 +619,3 @@ function VSCodeIcon({ className = "" }: { className?: string }) {
 }
 
 export default LandingPage;
-
