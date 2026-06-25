@@ -1,5 +1,5 @@
 import VSCodeSetupPage from "@/features/vs-code-setup";
 
-export default function Home() {
+export default function CVSCodePage() {
   return <VSCodeSetupPage />;
 }
