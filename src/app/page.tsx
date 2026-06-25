@@ -1,5 +1,5 @@
-import VSCodeSetupPage from "@/features/vs-code-setup";
+import VSCodeCppGuidePage from "@/features/guides";
 
 export default function Home() {
-  return <VSCodeSetupPage />;
+  return <VSCodeCppGuidePage />;
 }
