@@ -8,18 +8,9 @@ import {
   Trophy,
   Terminal,
   Folder,
-  type LucideIcon,
 } from "lucide-react";
 
-export type ExplorerNode = {
-  id: string;
-  label: string;
-  kind: "folder" | "file" | "section";
-  icon?: LucideIcon;
-  href?: string;
-  defaultOpen?: boolean;
-  children?: ExplorerNode[];
-};
+import type { GuideFeatureMeta, ExplorerNode } from "../types";
 
 export const GUIDE_SECTIONS: ExplorerNode[] = [
   {
@@ -91,7 +82,7 @@ export const EXPLORER_TREE: ExplorerNode[] = [
   },
 ];
 
-export const GUIDE_META = {
+export const GUIDE_META: GuideFeatureMeta = {
   title: "VS Code Setup for C/C++ — Complete Guide",
   description:
     "Step-by-step guide to set up Visual Studio Code for C and C++ development on Windows and Linux: MinGW, environment variables, extensions, and competitive programming tools.",
@@ -99,6 +90,8 @@ export const GUIDE_META = {
   ogDescription:
     "MinGW install, PATH setup, settings.json, must-have extensions, and sample programs to verify your C/C++ environment in VS Code.",
   ogUrl: "/",
+  iconSrc: "/vscode.png",
+  iconAlt: "VS Code",
 };
 
 export const SETTINGS_WINDOWS = `{

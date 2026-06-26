@@ -1,6 +1,6 @@
 "use client";
 
-import type { ExplorerNode } from "../data/vs-code-cpp";
+import type { ExplorerNode } from "../types";
 import { ExplorerTreeNode } from "./ExplorerTreeNode";
 
 export function ExplorerPanel({

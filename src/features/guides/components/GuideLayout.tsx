@@ -1,12 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, type ReactNode } from "react";
 import { Menu, X, ComputerIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Toaster } from "@/components/ui/sonner";
 import { ExplorerPanel } from "./ExplorerPanel";
-import type { ExplorerNode } from "../data/vs-code-cpp";
+import type { GuideFeatureMeta, ExplorerNode } from "../types";
 import { findNodePath } from "../data/vs-code-cpp";
 
 export function GuideLayout({
@@ -18,6 +19,7 @@ export function GuideLayout({
   onToggleNode,
   onSidebarOpen,
   onSidebarClose,
+  feature,
   children,
 }: {
   nodes: ExplorerNode[];
@@ -28,6 +30,7 @@ export function GuideLayout({
   onToggleNode: (id: string) => void;
   onSidebarOpen: () => void;
   onSidebarClose: () => void;
+  feature: GuideFeatureMeta;
   children: ReactNode;
 }) {
   const isMobile = useIsMobile();
@@ -58,7 +61,16 @@ export function GuideLayout({
           >
             <Menu className="h-4 w-4" />
           </Button>
-          <VSCodeIcon className="h-5 w-5 shrink-0" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-md  bg-transparent">
+            <Image
+              src={feature.iconSrc}
+              alt={feature.iconAlt}
+              width={28}
+              height={28}
+              className="h-full w-full object-contain"
+              priority
+            />
+          </div>
           <div className="min-w-0">
             <div className="truncate font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-vscode-muted">
               Explorer
@@ -117,12 +129,23 @@ export function GuideLayout({
           />
           <aside className="absolute left-0 top-0 flex h-full w-[min(86vw,19rem)] flex-col border-r border-border bg-vscode-panel shadow-2xl">
             <div className="flex items-center justify-between border-b border-vscode-border px-4 py-3">
-              <div>
-                <div className="font-mono text-xs uppercase tracking-[0.24em] text-vscode-muted">
-                  Explorer
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md border border-vscode-border bg-vscode-elevated">
+                  <Image
+                    src={feature.iconSrc}
+                    alt={feature.iconAlt}
+                    width={24}
+                    height={24}
+                    className="h-full w-full object-contain"
+                  />
                 </div>
-                <div className="font-mono text-sm text-vscode-text">
-                  VS-CODE-CPP-SETUP
+                <div>
+                  <div className="font-mono text-xs uppercase tracking-[0.24em] text-vscode-muted">
+                    Explorer
+                  </div>
+                  <div className="font-mono text-sm text-vscode-text">
+                    {nodes[0]?.label ?? feature.title}
+                  </div>
                 </div>
               </div>
               <Button
@@ -147,16 +170,5 @@ export function GuideLayout({
         </div>
       ) : null}
     </div>
-  );
-}
-
-function VSCodeIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      <path
-        fill="#0e639c"
-        d="M70 8 35 42 18 28 8 34v32l10 6 17-14 35 34 22-10V18zM70 32v36L42 50z"
-      />
-    </svg>
   );
 }

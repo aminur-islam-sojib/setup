@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, FileText, Folder } from "lucide-react";
-import type { ExplorerNode } from "../data/vs-code-cpp";
+import type { ExplorerNode } from "../types";
 
 export function ExplorerTreeNode({
   node,

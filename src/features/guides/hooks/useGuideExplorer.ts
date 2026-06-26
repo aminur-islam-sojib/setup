@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ExplorerNode } from "../data/vs-code-cpp";
+import type { ExplorerNode } from "../types";
 import { collectDefaultOpenIds } from "../data/vs-code-cpp";
 
 export function useGuideExplorer(sectionNodes: ExplorerNode[]) {

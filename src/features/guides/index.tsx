@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { GuideLayout } from "./components/GuideLayout";
+ 
 import { useGuideExplorer } from "./hooks/useGuideExplorer";
-import { GUIDE_SECTIONS, EXPLORER_TREE } from "./data/vs-code-cpp";
+import { GUIDE_SECTIONS, EXPLORER_TREE, GUIDE_META } from "./data/vs-code-cpp";
 import {
   Hero,
   Step1,
@@ -15,6 +15,7 @@ import {
   Competitive,
 } from "@/guides/vs-code-cpp";
 import Footer from "@/components/Shared/Footer";
+import { GuideLayout } from "./components/GuideLayout";
 
 export default function VSCodeCppGuidePage() {
   const {
@@ -54,6 +55,7 @@ export default function VSCodeCppGuidePage() {
       onToggleNode={handleToggleNode}
       onSidebarOpen={() => setSidebarOpen(true)}
       onSidebarClose={() => setSidebarOpen(false)}
+      feature={GUIDE_META}
     >
       <article className="mx-auto max-w-3xl px-6 py-12 lg:px-12 lg:py-16">
         <Hero />
