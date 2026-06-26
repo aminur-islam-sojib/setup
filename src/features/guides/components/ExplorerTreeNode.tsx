@@ -28,7 +28,7 @@ export function ExplorerTreeNode({
       <div
         className={`group flex items-center gap-1 rounded-sm px-2 py-1 text-sm transition-colors ${
           isActive
-            ? "bg-vscode-accent text-vscode-accent-foreground"
+            ? "bg-vscode-accent text-vscode-accent-foreground bg-vscode-elevated"
             : "text-vscode-text hover:bg-vscode-elevated"
         }`}
         style={{ paddingLeft: `${0.75 + depth * 0.9}rem` }}
@@ -37,8 +37,8 @@ export function ExplorerTreeNode({
           <button
             type="button"
             onClick={() => onToggleNode(node.id)}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-vscode-muted transition-colors hover:bg-black/20 hover:text-white"
-            aria-label={`${isOpen ? "Collapse" : "Expand"} ${node.label}`}
+            className={`flex h-6 w-6  shrink-0 items-center justify-center cursor-pointer rounded text-vscode-muted transition-colors hover:bg-black/20 hover:text-white`}
+            aria-label={`${isOpen ? "Collapse" : "Expand"} ${node.label} `}
             aria-expanded={isOpen}
           >
             <ChevronDown
@@ -60,7 +60,7 @@ export function ExplorerTreeNode({
               onToggleNode(node.id);
             }
           }}
-          className="flex min-w-0 flex-1 items-center gap-2 text-left"
+          className={`flex min-w-0 flex-1  items-center gap-2 text-left cursor-pointer `}
         >
           <Icon
             className={`h-4 w-4 shrink-0 ${
