@@ -1,5 +1,9 @@
-import PythonGuide from "@/features/pythone-setup/page";
+import VSCodeSetupGuidePage from "@/features/vs-code-setup/page";
 
 export default function Home() {
-  return <PythonGuide />;
+  return (
+    <>
+      <h1>Home</h1>
+    </>
+  );
 }
