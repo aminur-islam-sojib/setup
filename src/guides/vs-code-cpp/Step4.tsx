@@ -5,7 +5,7 @@ import CodeBlock from "@/components/Shared/CodeBlock";
 import {
   SETTINGS_WINDOWS,
   SETTINGS_LINUX,
-} from "@/features/guides/data/vs-code-cpp";
+} from "@/features/c-vscode/data/vs-code-cpp";
 
 export function Step4() {
   return (

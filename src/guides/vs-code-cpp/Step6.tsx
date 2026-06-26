@@ -3,7 +3,7 @@ import StepWrap from "@/components/Shared/StepWrap";
 import StepHeading from "@/components/Shared/StepHeading";
 import CodeBlock from "@/components/Shared/CodeBlock";
 import Chip from "@/components/Shared/Chip";
-import { CODE_SAMPLES } from "@/features/guides/data/vs-code-cpp";
+import { CODE_SAMPLES } from "@/features/c-vscode/data/vs-code-cpp";
 
 export function Step6() {
   return (

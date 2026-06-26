@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
- 
-import { useGuideExplorer } from "./hooks/useGuideExplorer";
-import { GUIDE_SECTIONS, EXPLORER_TREE, GUIDE_META } from "./data/vs-code-cpp";
+
 import {
   Hero,
   Step1,
@@ -15,7 +13,9 @@ import {
   Competitive,
 } from "@/guides/vs-code-cpp";
 import Footer from "@/components/Shared/Footer";
-import { GuideLayout } from "./components/GuideLayout";
+import { useGuideExplorer } from "../guides/hooks/useGuideExplorer";
+import { GuideLayout } from "../guides/components/GuideLayout";
+import { EXPLORER_TREE, GUIDE_META, GUIDE_SECTIONS } from "./data/vs-code-cpp";
 
 export default function VSCodeCppGuidePage() {
   const {

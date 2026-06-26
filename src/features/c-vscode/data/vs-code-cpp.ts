@@ -10,7 +10,7 @@ import {
   Folder,
 } from "lucide-react";
 
-import type { GuideFeatureMeta, ExplorerNode } from "../types";
+import type { GuideFeatureMeta, ExplorerNode } from "../../guides/types";
 
 export const GUIDE_SECTIONS: ExplorerNode[] = [
   {
