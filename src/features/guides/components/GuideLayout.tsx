@@ -106,7 +106,7 @@ export function GuideLayout({
       </header>
 
       <div className="flex min-h-[calc(100vh-3rem)]">
-        <aside className="sticky top-12 hidden h-[calc(100vh-3rem)] w-80 shrink-0 overflow-y-auto border-r border-border bg-vscode-panel lg:block">
+        <aside className="sticky top-12 hidden h-[calc(100vh-3rem)] w-80 shrink-0 overflow-y-auto border-r border-border bg-vscode-panel lg:block scrollbar-vscode">
           <ExplorerPanel
             nodes={nodes}
             activeId={activeId}
