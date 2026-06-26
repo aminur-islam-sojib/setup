@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ExplorerNode } from "../types";
-import { collectDefaultOpenIds } from "../../c-vscode/data/vs-code-cpp";
+import { collectDefaultOpenIds } from "../utils/explorer";
 
 export function useGuideExplorer(sectionNodes: ExplorerNode[]) {
   const [active, setActive] = useState<string>("overview");

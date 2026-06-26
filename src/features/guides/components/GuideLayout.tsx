@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Toaster } from "@/components/ui/sonner";
 import { ExplorerPanel } from "./ExplorerPanel";
 import type { GuideFeatureMeta, ExplorerNode } from "../types";
-import { findNodePath } from "../../c-vscode/data/vs-code-cpp";
+import { findNodePath } from "../utils/explorer";
 
 export function GuideLayout({
   nodes,

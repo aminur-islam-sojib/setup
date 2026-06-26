@@ -1,9 +1,5 @@
-import VSCodeCppGuidePage from "@/features/c-vscode/page";
+import PythonGuide from "@/features/pythone-setup/page";
 
 export default function Home() {
-  return (
-    <>
-      <VSCodeCppGuidePage />
-    </>
-  );
+  return <PythonGuide />;
 }
